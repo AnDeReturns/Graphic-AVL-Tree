@@ -1,0 +1,140 @@
+import java.util.LinkedList;
+import java.util.Queue;
+public class AVLTree {
+    private AVLNode root;
+    public AVLTree()
+    {
+        root = null;
+    }
+    public void add(AVLNode x)
+    {
+        if(root == null)
+        {
+            root = x;
+            return;
+        }
+        add(root, x);
+        balance(root);
+    }
+    private void add(AVLNode parent, AVLNode x)
+    {
+        if(parent == null)
+            return;
+        if(x.getValue().compareTo(parent.getValue()) < 0)
+            if(parent.left()==null)
+            {
+                parent.setLeft(x);
+            }
+            else
+                add(parent.left(),x);
+        else
+            if(parent.right()==null)
+                parent.setRight(x);
+            else
+                add(parent.right(),x);
+    }
+    public void balance(AVLNode k)
+    {
+        if(k != null)
+        {
+            balance(k.left());
+            balance(k.right());
+            if(k == root)
+            {
+                if(k.balanceFactor() == -2)
+                    if (k.right().balanceFactor()==-1)
+                        root = rightRightRotation(k, k.right());
+                    else
+                        root = rightLeftRotation(k, k.right(), k.right().left());
+                else if(k.balanceFactor() == 2)
+                    if(k.left().balanceFactor()==1)
+                        root = leftLeftRotation(k, k.left());
+                    else
+                        root = leftRightRotation(k, k.left(), k.left().right());
+            }
+            else
+            {
+                if(k.balanceFactor() == -2)
+                    if(k.right().balanceFactor()==-1)
+                        if(getParent(root, k).right() == k)
+                            getParent(root, k).setRight(rightRightRotation(k, k.right()));
+                        else
+                            getParent(root, k).setLeft(rightRightRotation(k, k.right()));
+                    else
+                        if(getParent(root, k).right() == k)
+                            getParent(root, k).setRight(rightLeftRotation(k, k.right(), k.right().left()));
+                        else
+                            getParent(root, k).setLeft(rightLeftRotation(k, k.right(), k.right().left()));
+                else if(k.balanceFactor() == 2)
+                    if(k.left().balanceFactor()==1)
+                        if(getParent(root, k).right() == k)
+                            getParent(root, k).setRight(leftLeftRotation(k, k.left()));
+                        else
+                            getParent(root, k).setLeft(leftLeftRotation(k, k.left()));
+                    else
+                        if(getParent(root, k).right() == k)
+                            getParent(root, k).setRight(leftRightRotation(k, k.left(), k.left().right()));
+                        else
+                            getParent(root, k).setLeft(leftRightRotation(k, k.left(), k.left().right()));
+            }
+        }
+    }
+    private AVLNode leftLeftRotation(AVLNode g, AVLNode p)
+    {
+        g.setLeft(p.right());
+        p.setRight(g);
+        return p;
+    }
+    private AVLNode leftRightRotation(AVLNode g, AVLNode p, AVLNode x)
+    {
+        p.setRight(x.left());
+        x.setLeft(p);
+         return leftLeftRotation(g, x);
+    }
+    private AVLNode rightRightRotation(AVLNode g, AVLNode p)
+    {
+        g.setRight(p.left());
+        p.setLeft(g);
+        return p;
+    }
+    private AVLNode rightLeftRotation(AVLNode g, AVLNode p, AVLNode x)
+    {
+        p.setLeft(x.right());
+        x.setRight(p);
+        return rightRightRotation(g, x);
+    }
+    private AVLNode getParent(AVLNode parent, AVLNode k)
+    {
+        if(parent.right()==k)
+            return parent;
+        if(parent.left()==k)
+            return parent;
+        if(parent.getValue().compareTo(k.getValue())>0)
+            return getParent(parent.left(), k);
+        else
+            return getParent(parent.right(), k);
+    }
+    public String fullLevelOrder()
+    {
+        String values = "";
+        Queue<AVLNode> queue = new LinkedList<AVLNode>();
+        queue.offer(root);
+        for(int i = 0; i<31; i++)
+        {
+            AVLNode k = queue.poll();
+            if(k == null)
+            {
+                values+="null ";
+                queue.offer(null);
+                queue.offer(null);
+            }
+            else
+            {
+                values+=k.getValue()+" ";
+                queue.offer(k.left());
+                queue.offer(k.right());
+            }
+        }
+        return values;
+    }
+}
