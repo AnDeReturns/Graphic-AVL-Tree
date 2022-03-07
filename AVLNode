@@ -1,0 +1,47 @@
+public class AVLNode {
+    private AVLNode left, right;
+    private Comparable Value;
+    public AVLNode(Comparable x)
+    {
+        Value = x;
+    }
+    public String toString()
+    {
+        return "Value:"+Value+", Left:"+(left==null?null:left.Value)+", Right:"+(right==null?null:right.Value);
+    }
+    public Comparable getValue()
+    {
+        return Value;
+    }
+    public void setValue(Comparable x)
+    {
+        Value = x;
+    }
+    public void setLeft(AVLNode x)
+    {
+        left = x;
+    }
+    public void setRight(AVLNode x)
+    {
+        right = x;
+    }
+    public AVLNode left()
+    {
+        return left;
+    }
+    public AVLNode right()
+    {
+        return right;
+    }
+    public int balanceFactor()
+    {
+        return getHeight(left())-getHeight(right());
+    }
+    private int getHeight(AVLNode k)
+    {
+        if(k == null)
+            return -1;
+        return 1 + Math.max(getHeight(k.left()),
+                getHeight(k.right()));
+    }
+}
