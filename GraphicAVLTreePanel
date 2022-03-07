@@ -1,0 +1,106 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+public class GraphicAVLTreePanel extends JPanel implements KeyListener
+{
+    private String str;
+    private AVLTree tree;
+    private String values;
+    public GraphicAVLTreePanel()
+    {
+        str = "";
+        tree = new AVLTree();
+        values = tree.fullLevelOrder();
+        addKeyListener(this);
+    }
+    public void paint(Graphics g)
+    {
+        String[] vals = values.split(" ");
+        g.setColor(Color.WHITE);
+        g.fillRect(0,0, getWidth(), getHeight());
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g.drawString("Type an integer. Then press Enter.",0,20);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        if(!vals[0].equals("null"))
+        {
+            g.drawOval(690,0,60,60);
+            g.drawString(vals[0], 700,40);
+        }
+        for(int i = 0; i<2; i++)
+        {
+            if(!vals[i+1].equals("null"))
+            {
+                g.drawOval(i*736+322, 210,60,60);
+                g.drawString(vals[i+1], i*736+332,250);
+                g.drawLine(720,60,i*736+352,210);
+            }
+        }
+        for(int i = 0; i<4; i++)
+        {
+            if(!vals[i+3].equals("null"))
+            {
+                g.drawOval(i*368+138, 420, 60, 60);
+                g.drawString(vals[i+3], i*368+148,460);
+                if(i<2)
+                    g.drawLine(352,270,i*368+168,420);
+                else
+                    g.drawLine(1088,270,i*368+168,420);
+            }
+        }
+        for(int i = 0; i<8; i++)
+        {
+            if(!vals[i+7].equals("null"))
+            {
+                g.drawOval(i*184+46, 630, 60, 60);
+                g.drawString(vals[i+7], i * 184 + 56, 670);
+                for(int j = 0; j<8; j+=2)
+                {
+                    if(i<j+2)
+                    {
+                        g.drawLine(j*184+168,480,i*184+76,630);
+                        j = 8;
+                    }
+                }
+            }
+        }
+        for(int i = 0; i<16; i++)
+        {
+            if(!vals[i+15].equals("null"))
+            {
+                g.drawOval(i * 92, 840, 60, 60);
+                g.drawString(vals[i+15], i*92 +10, 880);
+                for(int j = 0; j<16; j+=2)
+                {
+                    if(i<j+2)
+                    {
+                        g.drawLine(j*92+76,690,i*92+30,840);
+                        j = 16;
+                    }
+                }
+            }
+        }
+    }
+    public void keyPressed(KeyEvent e){}
+    public void keyReleased(KeyEvent e){}
+    public void keyTyped(KeyEvent e)
+    {
+        char k = e.getKeyChar();
+        if(k == KeyEvent.VK_ENTER && !str.equals(""))
+        {
+            AVLNode node = new AVLNode(Integer.parseInt(str));
+            tree.add(node);
+            values = tree.fullLevelOrder();
+            str = "";
+            repaint();
+        }
+        else if(k != KeyEvent.VK_ENTER)
+            str+=k;
+    }
+    public void addNotify()
+    {
+        super.addNotify();
+        requestFocus();
+    }
+}
