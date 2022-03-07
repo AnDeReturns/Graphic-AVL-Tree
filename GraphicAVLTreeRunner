@@ -1,0 +1,6 @@
+public class GraphicAVLTreeRunner {
+    public static void main(String[] args)
+    {
+        GraphicAVLTree Graphic = new GraphicAVLTree("Graphic AVL Tree");
+    }
+}
